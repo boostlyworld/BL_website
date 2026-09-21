@@ -1,9 +1,10 @@
+import Navbar from "@/components/layout/Navbar";
+
 export default function Home() {
   return (
-    <main className="flex flex-1 items-center justify-center bg-cream">
-      <h1 className="font-heading text-5xl font-extrabold text-black">
-        brandslifter
-      </h1>
-    </main>
+    <>
+      <Navbar />
+      <main className="flex min-h-svh flex-1 bg-brand-black" />
+    </>
   );
 }
