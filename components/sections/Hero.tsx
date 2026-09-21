@@ -6,6 +6,7 @@ export default function Hero() {
   return (
     <section
       aria-labelledby="hero-heading"
+      data-nav-theme="dark"
       className="relative isolate flex min-h-svh items-center overflow-hidden bg-brand-black"
     >
       <Image
