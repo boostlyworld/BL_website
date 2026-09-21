@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import heroSunset from "@/public/images/hero_sunset.jpg";
+import heroSunset from "@/public/images/hero_sunset_fliped.jpg";
 
 export default function Hero() {
   return (
@@ -15,16 +15,16 @@ export default function Hero() {
         priority
         placeholder="blur"
         sizes="100vw"
-        className="-z-20 object-cover object-[30%_center] md:object-center"
+        className="-z-20 object-cover object-[68%_center] md:object-center"
       />
 
-      {/* Scrim: darkens only the text side, fading out well before the sun */}
+      {/* Scrim: light darkening on the text side only; text-shadow does the rest */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-linear-to-r from-black/60 via-black/30 via-45% to-transparent to-75% md:from-black/55 md:via-black/20 md:to-65%"
+        className="absolute inset-0 -z-10 bg-linear-to-r from-black/45 via-black/20 via-45% to-transparent to-75% md:from-black/35 md:via-black/15 md:to-60%"
       />
 
-      <div className="mx-auto w-full max-w-7xl px-5 pt-16 md:px-10 md:pt-20">
+      <div className="w-full px-5 pt-16 [text-shadow:0_1px_12px_rgb(0_0_0/0.35)] md:px-[8%] md:pt-20">
         <h1
           id="hero-heading"
           className="font-heading text-7xl leading-[0.9] font-extrabold tracking-[-0.04em] text-white sm:text-8xl lg:text-[10rem]"

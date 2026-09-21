@@ -32,11 +32,11 @@ export default function Navbar() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black/20 backdrop-blur-md supports-[backdrop-filter]:bg-black/15">
       <nav
         aria-label="Main"
-        className="mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto] items-center px-5 md:h-20 md:grid-cols-[1fr_auto_1fr] md:px-10"
+        className="grid h-16 grid-cols-[1fr_auto] items-center px-5 md:h-20 md:grid-cols-[1fr_auto_1fr] md:px-[8%]"
       >
         <Link
           href="/"
-          className={`justify-self-start rounded-sm font-heading text-xl font-extrabold tracking-tight text-white md:text-2xl ${focusRing}`}
+          className={`justify-self-start rounded-sm font-heading text-xl font-normal tracking-tight text-white md:text-2xl ${focusRing}`}
         >
           brandslifter
         </Link>
@@ -77,7 +77,7 @@ export default function Navbar() {
             className="w-4/5 border-white/10 bg-black px-6 pt-4 pb-8 text-white"
           >
             <div className="flex h-12 items-center justify-between">
-              <SheetTitle className="font-heading text-xl font-extrabold tracking-tight text-white">
+              <SheetTitle className="font-heading text-xl font-normal tracking-tight text-white">
                 brandslifter
               </SheetTitle>
               <SheetClose
