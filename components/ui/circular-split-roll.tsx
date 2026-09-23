@@ -214,7 +214,7 @@ function CircularSplitRollComp({
   rightAngleOffset = 0,
   focusPhase: focusPhaseProp,
   snap = false,
-  holdFraction = 0.2,
+  holdFraction = 0.15,
   leftDepthMax = 30,
   rightDepthMax = 40,
   columnSpreadVw = 5,
@@ -266,9 +266,19 @@ function CircularSplitRollComp({
         const render = (scrollProgress: number) => {
           progressRef.current = scrollProgress;
 
-          const rotation = snap
-            ? holdStep(scrollProgress * steps, holdFraction) / total
-            : scrollProgress;
+          const step = snap
+            ? holdStep(scrollProgress * steps, holdFraction)
+            : scrollProgress * total;
+          const rotation = step / total;
+          // 1 while the rotation is parked on an item, 0 once it is on its way to the next.
+          const settle = snap
+            ? 1 -
+              gsap.utils.clamp(
+                0,
+                1,
+                (Math.abs(step - Math.round(step)) - 0.02) / 0.06
+              )
+            : 1;
 
           const width =
             typeof window !== "undefined" ? window.innerWidth : DESKTOP_WIDTH;
@@ -343,7 +353,7 @@ function CircularSplitRollComp({
             );
 
             if (description) {
-              gsap.set(description, { opacity: focusStrength });
+              gsap.set(description, { opacity: focusStrength * settle });
             }
           });
 
@@ -403,9 +413,9 @@ function CircularSplitRollComp({
           snap: snap
             ? {
                 snapTo: 1 / steps,
-                duration: { min: 0.25, max: 0.7 },
-                delay: 0.08,
-                ease: "power2.inOut",
+                duration: { min: 0.5, max: 1.1 },
+                delay: 0.15,
+                ease: "sine.inOut",
               }
             : undefined,
           invalidateOnRefresh: true,
@@ -495,7 +505,7 @@ function CircularSplitRollComp({
                   <span className="relative inline-block -translate-x-1/2">
                     {item.title}
                     {item.description ? (
-                      <span className="circular-scroll-showcase__left-desc absolute left-1/2 top-full mt-4 block w-[min(26rem,34vw)] -translate-x-1/2 whitespace-normal font-body text-base font-normal leading-snug tracking-normal text-neutral-500 opacity-0 lg:text-lg">
+                      <span className="circular-scroll-showcase__left-desc absolute left-1/2 top-full mt-4 block w-[min(26rem,34vw)] -translate-x-1/2 whitespace-normal font-body text-base font-normal leading-snug tracking-normal text-neutral-500 opacity-0 transition-opacity duration-300 lg:text-lg">
                         {item.description}
                       </span>
                     ) : null}

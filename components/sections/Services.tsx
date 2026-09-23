@@ -7,30 +7,30 @@ import CircularSplitRoll, {
 const SERVICES: CircularSplitRollItem[] = [
   {
     title: "Web Design & Development",
-    image: "/images/services/web-design-development.jpg",
+    image: "/images/web.jpg",
     description:
       "Fast, on-brand websites built to convert visitors into customers.",
   },
   {
     title: "Performance Advertising",
-    image: "/images/services/performance-advertising.jpg",
+    image: "/images/performance%20marketing.jpeg",
     description:
       "Data-driven campaigns across Meta, TikTok, and Google that scale.",
   },
   {
     title: "Social Media Management",
-    image: "/images/services/social-media-management.jpg",
+    image: "/images/social%20media.jpg",
     description:
       "Consistent, on-brand content that builds real audience momentum.",
   },
   {
     title: "Search Engine Optimization",
-    image: "/images/services/search-engine-optimization.jpg",
+    image: "/images/seo.jpg",
     description: "Technical and content strategy that gets you found on Google.",
   },
   {
     title: "AI Search Optimization",
-    image: "/images/services/ai-search-optimization.jpg",
+    image: "/images/ai.jpg",
     description:
       "Positioning your brand to show up in AI-powered search results.",
   },
@@ -62,6 +62,7 @@ export default function Services() {
         radius={500}
         cardSize={205}
         snap
+        scrub={2}
       />
     </section>
   );
