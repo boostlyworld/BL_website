@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280" fill="none">
+  <!-- Envelope: outer gores gold, inner gores orange, centre gore yellow -->
+  <path d="M100 8C158 8 192 52 192 104C192 154 152 184 126 206H74C48 184 8 154 8 104C8 52 42 8 100 8Z" fill="#EDB137"/>
+  <path d="M100 8C126 8 138 58 138 104C138 150 120 186 112 206H88C80 186 62 150 62 104C62 58 74 8 100 8Z" fill="#FF5A1F"/>
+  <path d="M100 8C109 8 114 58 114 104C114 150 105 186 100 206C95 186 86 150 86 104C86 58 91 8 100 8Z" fill="#FFDE70"/>
+  <!-- Skirt -->
+  <path d="M74 206H126L119 222H81L74 206Z" fill="#FF5A1F"/>
+  <!-- Ropes -->
+  <path d="M82 222L87 250M118 222L113 250M94 222L96 250M106 222L104 250" stroke="#EDB137" stroke-width="2" stroke-linecap="round"/>
+  <!-- Basket -->
+  <rect x="84" y="250" width="32" height="24" rx="4" fill="#EDB137"/>
+  <path d="M84 258H116M84 266H116" stroke="#FF5A1F" stroke-width="2"/>
+</svg>
