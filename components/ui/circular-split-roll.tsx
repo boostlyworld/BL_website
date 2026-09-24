@@ -540,12 +540,13 @@ function CircularSplitRollComp({
         </div>
       </div>
 
-      <div className={`w-full px-5 py-10 max-md:px-4 max-md:py-8 ${reducedMotion ? "block" : "sr-only max-[1025px]:not-sr-only max-[1025px]:block"}`}>
-        <div className="mx-auto grid w-full max-w-5xl grid-cols-3 gap-5 max-md:grid-cols-2 max-md:gap-4">
+      <div className={`w-full py-10 max-md:py-8 ${reducedMotion ? "block" : "sr-only max-[1025px]:not-sr-only max-[1025px]:block"}`}>
+        {/* Swipeable row: one card in view, the next peeking in from the right */}
+        <div className="flex w-full snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain scroll-px-5 px-5 pb-8 max-md:gap-4 max-md:scroll-px-4 max-md:px-4">
           {safeItems.map((item) => (
             <article
               key={item.id}
-              className={`w-full ${gridCardClassName}`}
+              className={`w-[min(42%,26rem)] flex-none snap-start max-md:w-[62%] max-sm:w-[82%] ${gridCardClassName}`}
             >
               <div
                 className={`relative aspect-square w-full overflow-hidden rounded-[18px] bg-[#f5f2eb] shadow-[0_18px_38px_rgba(0,0,0,0.28)] max-md:rounded-[14px] ${gridImageClassName}`}

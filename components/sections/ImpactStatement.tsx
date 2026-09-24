@@ -48,11 +48,13 @@ export default function ImpactStatement() {
        * 10.7cqw keeps a margin against subpixel rounding. cqw resolves against this section's
        * content box, so the gutters are already excluded. Because the size is a fraction of
        * that width, every length in the line scales with it and the break lands in the same
-       * place at every screen size — two lines, filling the measure, from phone to desktop.
+       * place at every screen size — two lines, filling the measure, down to tablet.
+       * Below md that reads too small, so phones get a larger fraction and wrap onto more
+       * lines; 15cqw still fits the longest rotating word ("businesses.") on one line.
        */}
       <h2
         id="impact-heading"
-        className="font-heading text-[10.7cqw] leading-[1.02] font-bold tracking-[-0.04em] text-black"
+        className="font-heading text-[15cqw] md:text-[10.7cqw] leading-[1.02] font-bold tracking-[-0.04em] text-black"
       >
         <span className="sr-only">
           We make things that lift brands, businesses, and people.

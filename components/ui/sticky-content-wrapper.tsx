@@ -82,7 +82,7 @@ const renderStickyContent = (item: StickyContentItem) => {
   const link = getLink(item);
 
   return (
-    <div className="flex h-full w-full flex-col justify-center text-foreground">
+    <div className="flex h-full w-full flex-col justify-center text-foreground max-[1025px]:justify-start">
       {item.heading && (
         <h3 className="font-heading text-3xl leading-[1.05] font-bold tracking-[-0.02em] text-black md:text-5xl">
           {item.heading}
@@ -359,7 +359,7 @@ function StickyContentComp({
     >
       <div
         ref={stickyRef}
-        className="sticky top-0 flex h-screen w-full justify-between max-[1025px]:h-screen max-[1025px]:flex-col-reverse max-[1025px]:justify-start max-[1025px]:px-[5vw] max-md:px-[6vw]"
+        className="sticky top-0 flex h-screen w-full justify-between max-[1025px]:h-svh max-[1025px]:flex-col-reverse max-[1025px]:justify-start max-[1025px]:px-[5vw] max-[1025px]:pt-24 max-md:px-[6vw] max-md:pt-20"
       >
         <div className="absolute bottom-10 left-[20%] z-30 flex -translate-x-1/2 flex-col items-center justify-center gap-[0.5vw] text-foreground max-[1025px]:hidden">
           <p className="text-lg text-foreground">scroll</p>
@@ -413,7 +413,7 @@ function StickyContentComp({
         </div>
 
         <div
-          className={`relative h-full w-[42%] max-[1025px]:h-[55%] max-[1025px]:w-full ${bgColor ? "" : "bg-background"} ${leftClassName}`}
+          className={`relative h-full w-[42%] max-[1025px]:h-auto max-[1025px]:min-h-0 max-[1025px]:w-full max-[1025px]:flex-1 ${bgColor ? "" : "bg-background"} ${leftClassName}`}
           style={bgColor ? { backgroundColor: bgColor } : undefined}
         >
           {items.map((item, index) => (
@@ -430,7 +430,7 @@ function StickyContentComp({
         </div>
 
         <div
-          className={`relative h-full w-1/2 overflow-hidden max-[1025px]:mt-[7vh] max-[1025px]:h-[37%] max-[1025px]:w-full max-[1025px]:rounded-[3.5vw] ${rightClassName}`}
+          className={`relative h-full w-1/2 overflow-hidden max-[1025px]:h-[40%] max-[1025px]:w-full max-[1025px]:flex-none max-md:h-[34%] md:max-[1025px]:[@media(max-height:720px)]:h-[32%] max-md:[@media(max-height:720px)]:h-[27%] max-[1025px]:rounded-[3.5vw] ${rightClassName}`}
         >
           {items.map((item, index) => (
             <div
@@ -479,7 +479,7 @@ export default function StickyContentWrapper({
     <StickyContentComp
       items={items}
       bgColor={bgColor}
-      contentClassName="pl-5 pr-8 md:pl-[8vw] max-[1025px]:pl-0 max-[1025px]:pr-0 max-[1025px]:pt-8"
+      contentClassName="pl-5 pr-8 md:pl-[8vw] max-[1025px]:pl-0 max-[1025px]:pr-0 max-[1025px]:pt-10 max-md:pt-7"
       contentEnterYPercent={contentEnterYPercent}
       contentExitYPercent={-2}
       contentTransitionDuration={contentTransitionDuration}
