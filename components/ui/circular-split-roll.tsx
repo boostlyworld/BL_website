@@ -20,6 +20,8 @@ function usePrefersReducedMotion() {
 
 const DESKTOP_WIDTH = 1200;
 const TABLET_MIN_WIDTH = 768;
+// At or below this width the columns stack: images above, titles below.
+const STACKED_QUERY = "(max-width: 1025px)";
 
 const LEFT_DEPTH_MAX = 30;
 const RIGHT_DEPTH_MAX = 40;
@@ -171,9 +173,6 @@ interface CircularSplitRollCompProps {
   /** Column horizontal offset: translateX(calc(<columnSpreadVw>vw - <columnOffsetPx>px)). */
   columnSpreadVw?: number;
   columnOffsetPx?: number;
-  gridImageClassName?: string;
-  gridCardClassName?: string;
-  gridTitleClassName?: string;
 }
 
 function CircularSplitRollComp({
@@ -219,13 +218,11 @@ function CircularSplitRollComp({
   rightDepthMax = 40,
   columnSpreadVw = 5,
   columnOffsetPx = 500,
-
-  gridImageClassName = "",
-  gridCardClassName = "",
-  gridTitleClassName = "",
 }: CircularSplitRollCompProps) {
   const rootRef = useRef<HTMLElement | null>(null);
   const stickyRef = useRef<HTMLDivElement | null>(null);
+  const leftColumnRef = useRef<HTMLDivElement | null>(null);
+  const rightColumnRef = useRef<HTMLDivElement | null>(null);
   const progressRef = useRef(0);
   const reducedMotion = usePrefersReducedMotion();
 
@@ -244,7 +241,9 @@ function CircularSplitRollComp({
 
     const mm = gsap.matchMedia();
 
-    mm.add("(min-width: 769px)", () => {
+    mm.add({ stacked: STACKED_QUERY, wide: `not all and ${STACKED_QUERY}` }, (mmContext) => {
+      const stacked = Boolean(mmContext.conditions?.stacked);
+
       const ctx = gsap.context(() => {
         const leftNodes = gsap.utils.toArray(
           ".circular-scroll-showcase__left-item"
@@ -289,21 +288,38 @@ function CircularSplitRollComp({
             factor = width / DESKTOP_WIDTH;
           }
 
-          const leftRadiusScaledX = leftRadiusX * factor;
-          const leftRadiusScaledY = leftRadiusY * factor;
-          const rightRadiusScaledX = rightRadiusX * factor;
-          const rightRadiusScaledY = rightRadiusY * factor;
+          let leftRadiusScaledX = leftRadiusX * factor;
+          let leftRadiusScaledY = leftRadiusY * factor;
+          let rightRadiusScaledX = rightRadiusX * factor;
+          let rightRadiusScaledY = rightRadiusY * factor;
+          let cardWidth = imageCardWidth * factor;
+          let cardHeight = imageCardHeight * factor;
+
+          if (stacked) {
+            // Same circles, sized to each stacked band instead of the viewport width. The radius
+            // puts neighbouring items just past the band edge, where the band clips them.
+            const imageBand = rightColumnRef.current?.clientHeight ?? 0;
+            const textBand = leftColumnRef.current?.clientHeight ?? 0;
+            const card = Math.min(width * 0.72, imageBand * 0.78, 440);
+
+            cardWidth = card;
+            cardHeight = card * (imageCardHeight / imageCardWidth);
+            rightRadiusScaledX = rightRadiusScaledY = imageBand * 0.8;
+            leftRadiusScaledX = leftRadiusScaledY = textBand * 0.8;
+          }
 
           if (rootRef.current) {
-            rootRef.current.style.setProperty(
-              "--css-card-width",
-              `${imageCardWidth * factor}px`
-            );
+            rootRef.current.style.setProperty("--css-card-width", `${cardWidth}px`);
+            rootRef.current.style.setProperty("--css-card-height", `${cardHeight}px`);
 
-            rootRef.current.style.setProperty(
-              "--css-card-height",
-              `${imageCardHeight * factor}px`
-            );
+            // Stacked: shift each band so its focus point (the circle's edge) lands centred.
+            if (stacked) {
+              rootRef.current.style.setProperty("--css-left-shift", `${-leftRadiusScaledX}px`);
+              rootRef.current.style.setProperty("--css-right-shift", `${rightRadiusScaledX}px`);
+            } else {
+              rootRef.current.style.removeProperty("--css-left-shift");
+              rootRef.current.style.removeProperty("--css-right-shift");
+            }
           }
 
           leftNodes.forEach((node, index) => {
@@ -408,7 +424,7 @@ function CircularSplitRollComp({
           start: "top top",
           end: `+=${sectionHeight * safeItems.length}%`,
           pin: stickyRef.current,
-          scrub,
+          scrub: reducedMotion ? true : scrub,
           pinSpacing,
           snap: snap
             ? {
@@ -443,6 +459,7 @@ function CircularSplitRollComp({
     return () => mm.revert();
   }, [
     safeItems,
+    reducedMotion,
     scrub,
     pinSpacing,
     sectionHeight,
@@ -487,25 +504,28 @@ function CircularSplitRollComp({
     >
       <div
         ref={stickyRef}
-        aria-hidden="true"
-        className={`relative h-screen w-full overflow-hidden ${reducedMotion ? "hidden" : "max-[1025px]:hidden"}`}
+        className="relative h-screen w-full overflow-hidden max-[1025px]:h-svh max-[1025px]:pt-16"
       >
-        <div className="relative mx-auto flex h-full w-full">
+        {/* Side by side on desktop; stacked (images on top) at tablet and phone widths */}
+        <div className="relative mx-auto flex h-full w-full max-[1025px]:flex-col-reverse">
           <div
-            className="relative flex h-full w-[50vw] items-center justify-center"
-            style={{ transform: `translateX(calc(${columnSpreadVw}vw - ${columnOffsetPx}px))` }}
+            ref={leftColumnRef}
+            className="relative flex h-full w-[50vw] items-center justify-center max-[1025px]:min-h-0 max-[1025px]:w-full max-[1025px]:flex-1 max-[1025px]:overflow-hidden"
           >
-            <div className="relative h-[78vh]">
+            <div
+              className="relative h-[78vh] max-[1025px]:h-full"
+              style={{ transform: `translateX(var(--css-left-shift, calc(${columnSpreadVw}vw - ${columnOffsetPx}px)))` }}
+            >
               {safeItems.map((item) => (
                 <div
                   key={item.id}
-                  className="circular-scroll-showcase__left-item pointer-events-none absolute left-1/2 top-1/2 w-full origin-center whitespace-nowrap text-center text-(length:--css-title-size,clamp(28px,3vw,56px)) font-medium leading-none tracking-[-0.04em] opacity-0 will-change-[transform,opacity]"
+                  className="circular-scroll-showcase__left-item pointer-events-none absolute left-1/2 top-1/2 w-full max-[1025px]:top-[22%] origin-center whitespace-nowrap text-center text-(length:--css-title-size,clamp(28px,3vw,56px)) max-[1025px]:text-[clamp(26px,6.5vw,44px)] font-medium leading-none tracking-[-0.04em] opacity-0 will-change-[transform,opacity]"
                 >
                   {/* Centers the title on the item's anchor so long titles don't run into the cards */}
-                  <span className="relative inline-block -translate-x-1/2">
+                  <span className="relative inline-block -translate-x-1/2 max-[1025px]:w-[min(88vw,40rem)] max-[1025px]:whitespace-normal">
                     {item.title}
                     {item.description ? (
-                      <span className="circular-scroll-showcase__left-desc absolute left-1/2 top-full mt-4 block w-[min(26rem,34vw)] -translate-x-1/2 whitespace-normal font-body text-base font-normal leading-snug tracking-normal text-neutral-500 opacity-0 transition-opacity duration-300 lg:text-lg">
+                      <span className="circular-scroll-showcase__left-desc absolute left-1/2 top-full mt-4 block w-[min(26rem,34vw)] -translate-x-1/2 max-[1025px]:w-[min(80vw,30rem)] whitespace-normal font-body text-base font-normal leading-snug tracking-normal text-neutral-500 opacity-0 transition-opacity duration-300 lg:text-lg">
                         {item.description}
                       </span>
                     ) : null}
@@ -516,10 +536,13 @@ function CircularSplitRollComp({
           </div>
 
           <div
-            className="relative flex h-full w-[50vw] items-center justify-center"
-            style={{ transform: `translateX(calc(${columnOffsetPx}px - ${columnSpreadVw}vw))` }}
+            ref={rightColumnRef}
+            className="relative flex h-full w-[50vw] items-center justify-center max-[1025px]:h-[56%] max-[1025px]:w-full max-[1025px]:flex-none max-[1025px]:overflow-hidden max-[1025px]:[mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]"
           >
-            <div className="relative h-[78vh]">
+            <div
+              className="relative h-[78vh] max-[1025px]:h-full"
+              style={{ transform: `translateX(var(--css-right-shift, calc(${columnOffsetPx}px - ${columnSpreadVw}vw)))` }}
+            >
               {safeItems.map((item) => (
                 <div
                   key={item.id}
@@ -537,41 +560,6 @@ function CircularSplitRollComp({
               ))}
             </div>
           </div>
-        </div>
-      </div>
-
-      <div className={`w-full py-10 max-md:py-8 ${reducedMotion ? "block" : "sr-only max-[1025px]:not-sr-only max-[1025px]:block"}`}>
-        {/* Swipeable row: one card in view, the next peeking in from the right */}
-        <div className="flex w-full snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain scroll-px-5 px-5 pb-8 max-md:gap-4 max-md:scroll-px-4 max-md:px-4">
-          {safeItems.map((item) => (
-            <article
-              key={item.id}
-              className={`w-[min(42%,26rem)] flex-none snap-start max-md:w-[62%] max-sm:w-[82%] ${gridCardClassName}`}
-            >
-              <div
-                className={`relative aspect-square w-full overflow-hidden rounded-[18px] bg-[#f5f2eb] shadow-[0_18px_38px_rgba(0,0,0,0.28)] max-md:rounded-[14px] ${gridImageClassName}`}
-              >
-                <img
-                  src={item.image}
-                  alt={item.alt}
-                  className="block h-full w-full object-cover absolute inset-0"
-                  draggable="false"
-                />
-              </div>
-
-              <h3
-                className={`mt-3 text-center text-[clamp(18px,4vw,30px)] font-medium leading-none tracking-[-0.04em] text-foreground max-md:mt-2 max-md:text-[clamp(16px,5vw,24px)] ${gridTitleClassName}`}
-              >
-                {item.title}
-              </h3>
-
-              {item.description ? (
-                <p className="mt-2 text-center font-body text-sm font-normal leading-snug text-neutral-500 md:text-base">
-                  {item.description}
-                </p>
-              ) : null}
-            </article>
-          ))}
         </div>
       </div>
 
