@@ -32,11 +32,14 @@ export default function Navbar() {
   // data-nav-theme="dark" (photo/dark background) or "light" (white/cream).
   const headerRef = useRef<HTMLElement>(null);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  // Off the top the bar is bare; the frosted panel only fades in once scrolled.
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     let frame = 0;
     const update = () => {
       frame = 0;
+      setScrolled(window.scrollY > 8);
       const probe = (headerRef.current?.offsetHeight ?? 64) / 2;
       const sections = document.querySelectorAll<HTMLElement>("[data-nav-theme]");
       for (const section of sections) {
@@ -65,15 +68,27 @@ export default function Navbar() {
     <header
       ref={headerRef}
       data-theme={theme}
-      className="group fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black/20 backdrop-blur-md transition-colors duration-300 supports-[backdrop-filter]:bg-black/15 data-[theme=light]:border-black/5 data-[theme=light]:bg-white/75 data-[theme=light]:supports-[backdrop-filter]:bg-white/65"
+      data-scrolled={scrolled}
+      className="group fixed inset-x-0 top-0 z-50 isolate"
     >
+      {/* Legibility scrim: fades to nothing well below the nav row, so the bar has no edge */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 -bottom-8 -z-10 bg-linear-to-b from-black/35 via-black/15 to-transparent transition-colors duration-300 group-data-[theme=light]:from-white/70 group-data-[theme=light]:via-white/30 md:-bottom-12"
+      />
+      {/* Frosted panel: revealed by the background once you scroll. It runs past the foot of the
+          nav text and the mask fades the blur out over that overhang, never at the text's baseline. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 -bottom-10 -z-10 bg-black/25 opacity-0 backdrop-blur-md transition-opacity duration-300 [mask-image:linear-gradient(to_bottom,black_60%,transparent)] group-data-[scrolled=true]:opacity-100 group-data-[theme=light]:bg-white/60 md:-bottom-14"
+      />
       <nav
         aria-label="Main"
-        className="grid h-16 grid-cols-[1fr_auto] items-center px-5 md:h-20 md:grid-cols-[1fr_auto_1fr] md:px-[8%]"
+        className="grid h-14 grid-cols-[1fr_auto] items-center px-4 md:h-16 md:grid-cols-[1fr_auto_1fr] md:px-8"
       >
         <Link
           href="/"
-          className={`justify-self-start rounded-sm font-heading text-xl font-normal tracking-tight text-white transition-colors group-data-[theme=light]:text-black md:text-2xl ${focusRing}`}
+          className={`justify-self-start rounded-sm font-heading text-xl font-normal tracking-tight text-white transition-colors group-data-[theme=light]:text-brand-gold md:text-2xl ${focusRing}`}
         >
           brandslifter
         </Link>
@@ -95,7 +110,7 @@ export default function Navbar() {
         {/* Desktop CTA */}
         <a
           href={CTA.href}
-          className={`hidden justify-self-end rounded-full bg-white px-6 py-2.5 font-heading text-sm font-bold text-black transition-colors hover:bg-white/85 group-data-[theme=light]:bg-black group-data-[theme=light]:text-white group-data-[theme=light]:hover:bg-black/80 md:inline-flex ${focusRing}`}
+          className={`hidden justify-self-end rounded-full bg-white px-6 py-2.5 font-heading text-sm font-bold text-black transition-colors hover:bg-brand-gold hover:text-white group-data-[theme=light]:bg-black group-data-[theme=light]:text-brand-gold group-data-[theme=light]:hover:bg-brand-gold group-data-[theme=light]:hover:text-black md:inline-flex ${focusRing}`}
         >
           {CTA.label}
         </a>
@@ -141,7 +156,7 @@ export default function Navbar() {
                 <a
                   href={CTA.href}
                   onClick={closeMenu}
-                  className={`inline-flex w-full items-center justify-center rounded-full bg-white px-6 py-3.5 font-heading text-base font-bold text-black ${focusRing}`}
+                  className={`inline-flex w-full items-center justify-center rounded-full bg-white px-6 py-3.5 font-heading text-base font-bold text-black transition-colors hover:bg-brand-gold hover:text-white ${focusRing}`}
                 >
                   {CTA.label}
                 </a>

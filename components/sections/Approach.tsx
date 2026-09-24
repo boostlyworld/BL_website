@@ -51,10 +51,10 @@ export default function Approach() {
       data-nav-theme="light"
       className="bg-white"
     >
-      <div className="px-5 pt-28 md:px-[8%] md:pt-40">
+      <div className="px-5 pt-28 pb-16 text-left md:px-[8%] md:pt-40 md:pb-28">
         <h2
           id="approach-heading"
-          className="font-heading text-7xl leading-[0.9] font-extrabold tracking-[-0.04em] text-black sm:text-8xl lg:text-[10rem]"
+          className="font-heading text-6xl leading-[0.9] font-extrabold tracking-[-0.04em] text-black sm:text-7xl lg:text-[8.5rem]"
         >
           Our Approach
         </h2>

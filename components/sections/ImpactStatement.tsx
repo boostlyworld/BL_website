@@ -40,11 +40,19 @@ export default function ImpactStatement() {
       ref={sectionRef}
       aria-labelledby="impact-heading"
       data-nav-theme="light"
-      className="bg-white px-5 py-28 md:px-[8%] md:py-40"
+      className="@container bg-white px-5 py-28 md:px-[8%] md:py-40"
     >
+      {/*
+       * Sized to the gutters rather than to breakpoints, for the largest type that still
+       * breaks into two lines. Measured: two lines hold up to 10.9% of the available width;
+       * 10.7cqw keeps a margin against subpixel rounding. cqw resolves against this section's
+       * content box, so the gutters are already excluded. Because the size is a fraction of
+       * that width, every length in the line scales with it and the break lands in the same
+       * place at every screen size — two lines, filling the measure, from phone to desktop.
+       */}
       <h2
         id="impact-heading"
-        className="max-w-6xl font-heading text-5xl leading-[1.02] font-extrabold tracking-[-0.04em] text-black sm:text-6xl md:text-7xl lg:text-8xl xl:text-[7.5rem]"
+        className="font-heading text-[10.7cqw] leading-[1.02] font-bold tracking-[-0.04em] text-black"
       >
         <span className="sr-only">
           We make things that lift brands, businesses, and people.

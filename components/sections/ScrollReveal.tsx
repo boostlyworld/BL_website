@@ -3,7 +3,7 @@
 import { useEffect, useRef, type CSSProperties } from "react";
 
 const COPY =
-  "Anyone can post. Building a brand that actually lifts off takes strategy, story, and the patience to do it right.";
+  "Anyone can post. Anyone can run an ad. But building a brand that actually lifts off one people remember, trust, and come back to takes real strategy, a story worth telling, and the patience to do it right.";
 const EMPHASIS = "lifts off";
 
 const WORDS = COPY.split(" ");
@@ -64,7 +64,7 @@ export default function ScrollReveal() {
       className="relative h-[220svh] bg-white"
       style={{ "--p": 0 } as CSSProperties}
     >
-      <div className="sticky top-0 flex min-h-svh items-center px-5 pt-16 md:px-[8%] md:pt-20">
+      <div className="sticky top-0 flex min-h-svh items-center px-5 pt-14 md:px-[8%] md:pt-16">
         <div className="grid w-full gap-12 md:grid-cols-[22%_1fr] md:gap-16">
           {/* link list placeholder — content coming later */}
           <div className="order-last md:order-first" />

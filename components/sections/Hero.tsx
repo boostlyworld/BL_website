@@ -25,7 +25,7 @@ export default function Hero() {
         className="absolute inset-0 -z-10 bg-linear-to-r from-black/45 via-black/20 via-45% to-transparent to-75% md:from-black/35 md:via-black/15 md:to-60%"
       />
 
-      <div className="w-full px-5 pt-16 [text-shadow:0_1px_12px_rgb(0_0_0/0.35)] md:px-[8%] md:pt-20">
+      <div className="w-full px-5 pt-14 [text-shadow:0_1px_12px_rgb(0_0_0/0.35)] md:px-[8%] md:pt-16">
         <h1
           id="hero-heading"
           className="font-heading text-7xl leading-[0.9] font-extrabold tracking-[-0.04em] text-white sm:text-8xl lg:text-[10rem]"
